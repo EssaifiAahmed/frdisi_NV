@@ -42,21 +42,16 @@
     </style>
 
     <div class="container py-5">
-        <form action="#" method="POST" enctype="multipart/form-data" id="wizardForm">
-            @csrf
-
-            <!-- ===========================
-                                 WIZARD STEP INDICATOR
-                            =========================== -->
+        <form action="{{route('CondidaProjet')}}" method="POST" enctype="multipart/form-data" id="wizardForm">
+            @csrf 
+            <!-- =========================== WIZARD STEP INDICATOR =========================== -->
             <div class="step-indicator">
                 <div class="step step-1 active">1. Porteur(s) de Projet</div>
                 <div class="step step-2">2. Fiche Projet</div>
                 <div class="step step-3">3. Financement</div>
             </div>
 
-            <!-- ==========================================
-                                 STEP 1 – TOUTES LES INFORMATIONS PORTEURS
-                            ========================================== -->
+            <!-- ==========================================STEP 1 – TOUTES LES INFORMATIONS PORTEURS========================================== -->
             <div class="wizard-step active" id="step1">
 
                 <!-- Binôme -->
@@ -72,9 +67,7 @@
                     </div>
                 </div>
 
-                <!-- ============================
-                                     1er PORTEUR DE PROJET
-                                ============================ -->
+                <!-- ============================1er PORTEUR DE PROJET============================ -->
                 <div class="row mb-3">
                     <div class="col-md-4 form-group mt-3">
                         <h5><u>1er porteur de projet :</u></h5>
@@ -147,10 +140,12 @@
                     <div class="col-md-12 form-group" style="text-transform: uppercase; font-size:140%;">
                         <label><small><u>CIN portant adresse Casablanca-Settat ?</u></small></label>
                         <label class="ms-2">
-                            <input type="radio" name="radioadressp1" value="adresse_oui"> <small>Oui</small>
-                        </label>
+                            <input type="radio" name="radioadressp1" value="adresse_oui" id="radio_group1">
+                            {{ __('oui') }}
+                        </label>&nbsp;
                         <label class="ms-2">
-                            <input type="radio" name="radioadressp1" value="adresse_non"> <small>Non</small>
+                            <input type="radio" name="radioadressp1" value="adresse_non" id="radiogroup1">
+                            {{ __('non') }}
                         </label>
                     </div>
 
@@ -179,9 +174,7 @@
                     </div>
                 </div>
 
-                <!-- ============================
-                                     2e PORTEUR DE PROJET
-                                ============================ -->
+                <!-- ============================2eme PORTEUR DE PROJET============================ -->
                 <div class="row mb-3">
                     <div class="col-md-4 form-group mt-5">
                         <h5><u>2ème porteur de projet :</u></h5>
@@ -301,7 +294,7 @@
 
                 <div class="row">
 
-                    <div class="col-md-4 form-group">
+                    <div class="col-md-4 form-group mt-3">
                         <label for="nom_entreprise"><small>Nom de l'entreprise :</small></label>
                         <input type="text" class="form-control" name="nom_entreprise" id="nom_entreprise" required>
                     </div>
@@ -489,11 +482,6 @@
             </div>
             <!-- ========================================== STEP 3 – FINANCEMENT DU PROJET + SCRIPTS (FINAL) ========================================== -->
             <div class="wizard-step" id="step3">
-
-                <div class="section-title">
-                    <h2>Financement du projet</h2>
-                </div>
-
                 <div class="row mb-3">
                     <div class="col-md-4 form-group">
                         <h5><u>SOURCES DU FINANCEMENT :</u></h5>
@@ -729,147 +717,194 @@
 
                     return valid;
                 }
+            });
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                /* Input references */
+                const radioButtons = document.querySelectorAll('input[name="radio_group"]');
+                const div1 = document.getElementById('ecp_porteur_1');
+                const div2 = document.getElementById('ecp_porteur_2');
 
-                /* ----------------------------
-                   Binôme toggles (enable/disable 2nd porteur)
-                ---------------------------- */
-                const radioBinome = document.querySelectorAll('input[name="radio_group"]');
-                const porteur2Zone = document.getElementById('porteur2_zone');
-                const porteur2Fields = porteur2Zone ? porteur2Zone.querySelectorAll('input, textarea, select') : [];
+                // Porteur de projet 1 inputs
+                const inputsPorteur1 = [
+                    document.getElementById('nomp1'),
+                    document.getElementById('prenomp1'),
+                    document.getElementById('cinp1'),
+                    document.getElementById('telep1'),
+                    document.getElementById('emailp1'),
+                    document.getElementById('agep1'),
+                    document.getElementById('formationp1'),
+                    document.getElementById('parcourprop1'),
+                    document.getElementById('autreinfosp1'),
+                    document.getElementById('ecpp1'),
+                    document.getElementById('cinPDfp1'),
+                    document.getElementById('attresp1'),
+                    document.getElementById('cvPdfp1'),
+                    document.getElementById('diplomePdfp1')
+                ];
 
-                // By default disable porteur2 fields
-                porteur2Fields.forEach(i => i.disabled = true);
-                // show/hide experience blocks based on ecp_class presence is handled later
+                // Porteur de projet 2 inputs
+                const inputsPorteur2 = [
+                    document.getElementById('nomp2'),
+                    document.getElementById('prenomp2'),
+                    document.getElementById('cinp2'),
+                    document.getElementById('telep2'),
+                    document.getElementById('emailp2'),
+                    document.getElementById('agep2'),
+                    document.getElementById('formationp2'),
+                    document.getElementById('parcourprop2'),
+                    document.getElementById('autreinfosp2'),
+                    document.getElementById('ecpp2'),
+                    document.getElementById('cinPDfp2'),
+                    document.getElementById('attresp2'),
+                    document.getElementById('cvPdfp2'),
+                    document.getElementById('diplomePdfp2')
+                ];
 
-                radioBinome.forEach(r => {
-                    r.addEventListener('change', (e) => {
-                        if (e.target.value === 'binome_oui') {
-                            porteur2Fields.forEach(i => i.disabled = false);
-                            // reveal experience blocks if needed
-                            document.getElementById('ecp_porteur_2')?.classList.remove('ecp_class');
-                        } else {
-                            porteur2Fields.forEach(i => {
-                                // keep files cleared if disabling to avoid accidental upload
-                                if (i.type === 'file') i.value = '';
-                                i.disabled = true;
-                            });
-                            document.getElementById('ecp_porteur_2')?.classList.add('ecp_class');
+                // Project inputs
+                const inputsProjet = [
+                    document.getElementById('nom_entreprise'),
+                    document.getElementById('date_creation'),
+                    document.getElementById('statut_entreprise'),
+                    document.getElementById('Adresse_siege'),
+                    document.getElementById('presentation_startup'),
+                    document.getElementById('secteur_activite'),
+                    document.getElementById('site_internet'),
+                    document.getElementById('description_projet'),
+                    document.getElementById('contexte'),
+                    document.getElementById('caractere_innovant'),
+                    document.getElementById('impact'),
+                    document.getElementById('resultat_attends'),
+                    document.getElementById('stade_avancement'),
+                    document.getElementById('temps_developpement'),
+                    document.getElementById('decription_offre'),
+                    document.getElementById('cible'),
+                    document.getElementById('potentiel_marche'),
+                    document.getElementById('modele_economique'),
+                    document.getElementById('avantage_concurrentiel'),
+                    document.getElementById('strategie_commercial'),
+                    document.getElementById('partenaire_commerciaux'),
+                    document.getElementById('documents'),
+                    document.getElementById('dossier_juridique')
+                ];
+
+                // Initially disable only the project partners (they will be enabled after choice)
+                inputsPorteur1.forEach(input => input && (input.disabled = true));
+                inputsPorteur2.forEach(input => input && (input.disabled = true));
+                // Note: project inputs remain enabled per requirement.
+
+                // Handle Binôme selection
+                radioButtons.forEach(button => {
+                    button.addEventListener("change", (event) => {
+                        if (event.target.value === 'binome_oui') {
+                            // Show Expérience Commune fields
+                            div1.classList.remove('ecp_class');
+                            div2.classList.remove('ecp_class');
+                            // Enable all inputs for both porteurs and project
+                            inputsPorteur1.forEach(input => input && (input.disabled = false));
+                            inputsPorteur2.forEach(input => input && (input.disabled = false));
+                            inputsProjet.forEach(input => input && (input.disabled = false));
+                        } else if (event.target.value === 'binome_non') {
+                            // Hide Expérience Commune fields
+                            div1.classList.add('ecp_class');
+                            div2.classList.add('ecp_class');
+                            // Enable only first porteur, disable second porteur
+                            inputsPorteur1.forEach(input => input && (input.disabled = false));
+                            inputsPorteur2.forEach(input => input && (input.disabled = true));
+                            inputsProjet.forEach(input => input && (input.disabled = false));
                         }
                     });
                 });
 
-                /* ----------------------------
-                   CIN / Attestation toggles for both porteurs
-                ---------------------------- */
-                function setupRadioToggle(radioName, cinId, attId) {
-                    const radios = document.querySelectorAll(`input[name="${radioName}"]`);
-                    const cin = document.getElementById(cinId);
-                    const att = document.getElementById(attId);
-                    radios.forEach(r => {
-                        r.addEventListener('change', (e) => {
-                            if (e.target.value.includes('oui')) {
-                                if (cin) cin.disabled = false;
-                                if (att) att.disabled = true;
-                                if (att) att.value = '';
-                            } else {
-                                if (cin) cin.disabled = false;
-                                if (att) att.disabled = false;
-                            }
+                // Address logic for porteur 1
+                const cinpdfp1 = document.getElementById('cinPDfp1');
+                const attresp1 = document.getElementById('attresp1');
+                document.querySelectorAll('input[name="radioadressp1"]').forEach(button => {
+                    button.addEventListener("change", (event) => {
+                        cinpdfp1.disabled = false;
+                        if (event.target.value === 'adresse_oui') {
+                            attresp1.disabled = true; // No attestation needed if in Casablanca-Settat
+                        } else if (event.target.value === 'adresse_non') {
+                            attresp1.disabled = false; // Enable attestation otherwise
+                        }
+                    });
+                });
+
+                // Address logic for porteur 2
+                const cinpdfp2 = document.getElementById('cinPDfp2');
+                const attresp2 = document.getElementById('attresp2');
+                document.querySelectorAll('input[name="radioadressp2"]').forEach(button => {
+                    button.addEventListener("change", (event) => {
+                        cinpdfp2.disabled = false;
+                        if (event.target.value === 'adressoui') {
+                            attresp2.disabled = true;
+                        } else if (event.target.value === 'adressnon') {
+                            attresp2.disabled = false;
+                        }
+                    });
+                });
+            });
+            document.addEventListener('DOMContentLoaded', function(e) {
+                $(document).ready(function() {
+                    $("#add-row").click(function() {
+                        // Add a new row to the table
+                        var newRow = $('<tr>' +
+                            '<td><select class="form-select" name="Rubrique_de_depenses"></select></td>' +
+                            '<td><textarea type="text" name="description"></textarea></td>' +
+                            '<td><input type="text" name="montant_sf" id="montant_sf" class="montant"></td>' +
+                            '<td><input type="text" name="source_de_financement" id="source_de_financement" class="source_de_financement"></td>' +
+                            '<td><input type="text" name="pourcentage" id="result"></td>' +
+                            '</tr>');
+
+                        // Populate the select element with options using a for loop
+                        var selectElement = newRow.find('select[name="Rubrique_de_depenses"]');
+                        var rubriques = ["Acquisition licence, logiciels et abonnements",
+                            "Achat de marchandises", "Aménagement et installations", "Autres",
+                            "B.F.R", "Brevet, marques et valeurs similaires",
+                            "Charges de personnel", "Charges locatives", "Equipements",
+                            "Frais préliminaires", "FFrais de communication", "Frais étude",
+                            "Frais de déplacement", "Frais approche + dédouanement",
+                            "Frais assurance", "Honoraires", "Matériel et outillage",
+                            "Mobilier et matériel de bureau", "Système information"
+                        ];
+
+                        for (var i = 0; i < rubriques.length; i++) {
+                            selectElement.append('<option value="' + rubriques[i] + '">' + rubriques[
+                                i] + '</option>');
+                        }
+
+                        // Append the new row to the table
+                        $("#dynamic-table tbody").append(newRow);
+
+                        // Attach input event handler to the new row
+                        newRow.find('.montant, .source_de_financement').on('input', function() {
+                            calculatePercentage($(this).closest('tr'));
                         });
                     });
-                }
 
-                setupRadioToggle('radioadressp1', 'cinPDfp1', 'attresp1');
-                setupRadioToggle('radioadressp2', 'cinPDfp2', 'attresp2');
-
-                /* ----------------------------
-                   Dynamic finance rows
-                ---------------------------- */
-                const rubriques = [
-                    "Acquisition licence, logiciels et abonnements",
-                    "Achat de marchandises",
-                    "Aménagement et installations",
-                    "Autres",
-                    "B.F.R",
-                    "Brevet, marques et valeurs similaires",
-                    "Charges de personnel",
-                    "Charges locatives",
-                    "Equipements",
-                    "Frais préliminaires",
-                    "Frais de communication",
-                    "Frais étude",
-                    "Frais de déplacement",
-                    "Frais approche + dédouanement",
-                    "Frais assurance",
-                    "Honoraires",
-                    "Matériel et outillage",
-                    "Mobilier et matériel de bureau",
-                    "Système information"
-                ];
-
-                const addRowBtn = document.getElementById('add-row');
-                const dynamicTbody = document.querySelector('#dynamic-table tbody');
-
-                addRowBtn.addEventListener('click', function() {
-                    const tr = document.createElement('tr');
-
-                    tr.innerHTML = `
-                        <td>
-                            <select class="form-select rubrique-select" name="Rubrique_de_depenses[]">
-                                ${rubriques.map(r => `<option value="${r}">${r}</option>`).join('')}
-                            </select>
-                        </td>
-                        <td><textarea class="form-control description-field" name="description[]"></textarea></td>
-                        <td><input type="number" step="0.01" class="form-control montant" name="montant_sf[]"></td>
-                        <td><input type="number" step="0.01" class="form-control source" name="source_de_financement[]"></td>
-                        <td><input type="text" class="form-control pourcentage" name="pourcentage[]" readonly></td>
-                    `;
-
-                    // add event listeners for calculation
-                    const montant = tr.querySelector('.montant');
-                    const source = tr.querySelector('.source');
-                    const percent = tr.querySelector('.pourcentage');
-
-                    function calcRow() {
-                        const m = parseFloat(montant.value) || 0;
-                        const s = parseFloat(source.value) || 0;
-                        percent.value = m > 0 ? ((s / m) * 100).toFixed(2) : '0.00';
-                    }
-
-                    montant.addEventListener('input', calcRow);
-                    source.addEventListener('input', calcRow);
-
-                    dynamicTbody.appendChild(tr);
+                    // Delegate the input event handling to the document
+                    $(document).on('input', '.montant, .source_de_financement', function() {
+                        calculatePercentage(this);
+                    });
                 });
-
-                /* ----------------------------
-                   Calculate totals for besoins & ressources
-                ---------------------------- */
-                function calcTotals() {
-                    let totalB = 0,
-                        totalR = 0;
-                    document.querySelectorAll('.besoin').forEach(el => totalB += parseFloat(el.value) || 0);
-                    document.querySelectorAll('.ressource').forEach(el => totalR += parseFloat(el.value) || 0);
-                    document.getElementById('total_besoins').value = totalB.toFixed(2);
-                    document.getElementById('total_ressources').value = totalR.toFixed(2);
-                }
-
-                document.querySelectorAll('.besoin, .ressource').forEach(i => {
-                    i.addEventListener('input', calcTotals);
-                });
-
-                // initial totals calc in case there are preset values
-                calcTotals();
-
-                /* ----------------------------
-                   Small UX: remove 'is-invalid' on input when user edits
-                ---------------------------- */
-                document.querySelectorAll('input, textarea, select').forEach(el => {
-                    el.addEventListener('input', () => el.classList.remove('is-invalid'));
-                    el.addEventListener('change', () => el.classList.remove('is-invalid'));
-                });
-
             });
+
+            function calculatePercentage(input) {
+                // Get input values
+                var row = $(input).closest('tr');
+                var montant = parseFloat(row.find('.montant').val()) || 1;
+                var sourceDeFinancement = parseFloat(row.find('.source_de_financement').val()) ||
+                    1; // Default to 1 to avoid division by zero
+
+                // Calculate percentage
+                var result = 0;
+                var rawResult = (sourceDeFinancement / montant) * 100;
+                result = rawResult.toFixed(2);
+
+                // Display the result
+                row.find('#result').val(result);
+            }
         </script>
     </div>
 @endsection

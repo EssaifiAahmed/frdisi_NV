@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CandidateIncubsController;
+use App\Http\Controllers\CondidatureController;
 
 Route::get('/', function () {
     return view('home');
@@ -13,10 +14,16 @@ Auth::routes();
 Route::view('contact', 'contactUs')->name('contactUs');
 Route::view('brevet', 'brevets')->name('brevets');
 Route::view('incubation', 'projectIncubs')->name('incubation');
+Route::post('CondidaProject', [CandidateIncubsController::class, 'InsertCondidaProject'])->name('CondidaProjet');
 
 Route::middleware(['isauth'])->group(function () {
     Route::get('/adminpanel', [CandidateIncubsController::class, 'main'])->name('adminpanel');
     Route::get('/candidate/detail/{id}', [CandidateIncubsController::class, 'showCandidateDetail'])->name('candidate.detail');
     Route::post('/candidate/update/{id}', [CandidateIncubsController::class, 'findCandidateDetail'])->name('candidate.update');
-    Route::post('/candidate/checkhome', [CandidateIncubsController::class, 'CheckUserBackHome'])->name('candidate.checkhome');
+    Route::get('/candidate/project', [CandidateIncubsController::class,'getDataIncubs'])->name('candidate.project');
+    Route::get('/download-zipped-folder/{nom}/{prenom}/{cin}', [CandidateIncubsController::class, 'downloadZippedFolder'])->name('download.zipped-folder');
+    //---------------------------------------------- Routes for Doctoral Candidature ------------------------------------------------//
+    Route::get('/doctorat/candidature/data', [CondidatureController::class, 'getData'])->name('candidate.doctorat');
+    Route::get('/doctorat/candidature/download-zipped-folder/{nom}/{prenom}', [CondidatureController::class, 'downloadZippedFolder'])->name('doctorat.candidature.downloadZippedFolder');
+
 });

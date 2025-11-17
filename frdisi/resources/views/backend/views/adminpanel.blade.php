@@ -1,5 +1,102 @@
 @extends('backend.layouts.dashboard')
 @section('content')
+    <style>
+        #projectTable thead th {
+            white-space: nowrap;
+            font-size: 13px;
+            font-weight: 600;
+            color: #344767;
+        }
+
+        #projectTable tbody td {
+            white-space: nowrap;
+            font-size: 13px;
+        }
+
+        #projectTable_wrapper .dataTables_filter input {
+            border-radius: 10px;
+            padding: 6px 12px;
+            border: 1px solid #d1d7e1;
+        }
+
+        .download-btn {
+            padding: 4px 10px;
+            font-size: 12px;
+            border-radius: 8px;
+            background: #839a5eb3;
+            color: white;
+            text-decoration: none;
+        }
+
+        .download-btn:hover {
+            background: #839A5E;
+            color: white;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .action-btn {
+            padding: 4px 8px;
+            font-size: 12px;
+            border-radius: 6px;
+            background: #839a5eb3;
+            color: white;
+        }
+
+        .action-btn:hover {
+            background: #839A5E;
+            color: white;
+        }
+
+        #doctoratTable thead th {
+            white-space: nowrap;
+            font-size: 13px;
+            font-weight: 600;
+            color: #344767;
+        }
+
+        #doctoratTable tbody td {
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        /* Description PFE — texte tronqué */
+        .truncate-text {
+            max-width: 350px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+        }
+
+        /* Bouton Téléchargement */
+        .download-btn {
+            padding: 4px 10px;
+            font-size: 12px;
+            border-radius: 8px;
+            background: #839a5eb3;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .download-btn:hover {
+            background: #839A5E;
+            color: #fff;
+        }
+
+        /* Mobile responsive cards */
+        @media (max-width: 992px) {
+            #doctoratTable td:nth-child(10) {
+                /* Description */
+                white-space: normal !important;
+                max-width: 100% !important;
+            }
+        }
+    </style>
+
     <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
         <div class="container-fluid py-4">
             <div class="row">
@@ -12,7 +109,7 @@
                                         <div class="numbers">
                                             <p class="text-sm mb-0 text-capitalize font-weight-bold">Total incubations
                                                 inscription</p>
-                                            <h5 class="font-weight-bolder mb-0">0</h5>
+                                            <h5 class="font-weight-bolder mb-0">{{ $countIncubs }}</h5>
                                         </div>
                                     </div>
                                     <div class="col-4 text-end">
@@ -34,7 +131,7 @@
                                         <div class="numbers">
                                             <p class="text-sm mb-0 text-capitalize font-weight-bold">Total doctorant
                                                 inscription</p>
-                                            <h5 class="font-weight-bolder mb-0">0</h5>
+                                            <h5 class="font-weight-bolder mb-0">{{ $countDocotrat }}</h5>
                                         </div>
                                     </div>
                                     <div class="col-4 text-end">
@@ -55,315 +152,80 @@
                         <div class="card-header pb-0">
                             <div class="row">
                                 <div class="col-lg-6 col-7">
-                                    <h6>Projects</h6>
-                                    <p class="text-sm mb-0">
-                                        <i class="fa fa-check text-info" aria-hidden="true"></i>
-                                        <span class="font-weight-bold ms-1">30 done</span> this month
-                                    </p>
+                                    <h6>Les projets inscris pour Incubation</h6>
                                 </div>
                             </div>
                         </div>
                         <div class="card-body px-0 pb-2">
                             <div class="table-responsive">
-                                <table class="table align-items-center mb-0">
+                                <table class="table align-items-center mb-0" id="projectTable">
                                     <thead>
                                         <tr>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                Companies</th>
-                                            <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                Members</th>
-                                            <th
-                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                Budget
-                                            </th>
-                                            <th
-                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                Completion</th>
+                                            <th>#</th>
+                                            <th>Nom & Prénom</th>
+                                            <th>CIN</th>
+                                            <th>Téléphone</th>
+                                            <th>Email</th>
+                                            <th>Âge</th>
+                                            <th>Formation</th>
+                                            <th>Parcours</th>
+                                            <th>Exp. Préalable</th>
+                                            <th>Dossier</th>
+                                            <th>Voir les details</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div>
-                                                        <img src="../assets/img/small-logos/logo-xd.svg"
-                                                            class="avatar avatar-sm me-3" alt="xd">
-                                                    </div>
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Soft UI XD Version</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="avatar-group mt-2">
-                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
-                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                                        title="Ryan Tompson">
-                                                        <img src="../assets/img/team-1.jpg" alt="team1">
-                                                    </a>
-                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
-                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                                        title="Romina Hadid">
-                                                        <img src="../assets/img/team-2.jpg" alt="team2">
-                                                    </a>
-                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
-                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                                        title="Alexander Smith">
-                                                        <img src="../assets/img/team-3.jpg" alt="team3">
-                                                    </a>
-                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
-                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                                        title="Jessica Doe">
-                                                        <img src="../assets/img/team-4.jpg" alt="team4">
-                                                    </a>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="text-xs font-weight-bold"> $14,000 </span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <div class="progress-wrapper w-75 mx-auto">
-                                                    <div class="progress-info">
-                                                        <div class="progress-percentage">
-                                                            <span class="text-xs font-weight-bold">60%</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="progress">
-                                                        <div class="progress-bar bg-gradient-info w-60" role="progressbar"
-                                                            aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div>
-                                                        <img src="../assets/img/small-logos/logo-atlassian.svg"
-                                                            class="avatar avatar-sm me-3" alt="atlassian">
-                                                    </div>
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Add Progress Track</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="avatar-group mt-2">
-                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
-                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                                        title="Romina Hadid">
-                                                        <img src="../assets/img/team-2.jpg" alt="team5">
-                                                    </a>
-                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
-                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                                        title="Jessica Doe">
-                                                        <img src="../assets/img/team-4.jpg" alt="team6">
-                                                    </a>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="text-xs font-weight-bold"> $3,000 </span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <div class="progress-wrapper w-75 mx-auto">
-                                                    <div class="progress-info">
-                                                        <div class="progress-percentage">
-                                                            <span class="text-xs font-weight-bold">10%</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="progress">
-                                                        <div class="progress-bar bg-gradient-info w-10" role="progressbar"
-                                                            aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div>
-                                                        <img src="../assets/img/small-logos/logo-slack.svg"
-                                                            class="avatar avatar-sm me-3" alt="team7">
-                                                    </div>
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Fix Platform Errors</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="avatar-group mt-2">
-                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
-                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                                        title="Romina Hadid">
-                                                        <img src="../assets/img/team-3.jpg" alt="team8">
-                                                    </a>
-                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
-                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                                        title="Jessica Doe">
-                                                        <img src="../assets/img/team-1.jpg" alt="team9">
-                                                    </a>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="text-xs font-weight-bold"> Not set </span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <div class="progress-wrapper w-75 mx-auto">
-                                                    <div class="progress-info">
-                                                        <div class="progress-percentage">
-                                                            <span class="text-xs font-weight-bold">100%</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="progress">
-                                                        <div class="progress-bar bg-gradient-success w-100"
-                                                            role="progressbar" aria-valuenow="100" aria-valuemin="0"
-                                                            aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div>
-                                                        <img src="../assets/img/small-logos/logo-spotify.svg"
-                                                            class="avatar avatar-sm me-3" alt="spotify">
-                                                    </div>
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Launch our Mobile App</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="avatar-group mt-2">
-                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
-                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                                        title="Ryan Tompson">
-                                                        <img src="../assets/img/team-4.jpg" alt="user1">
-                                                    </a>
-                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
-                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                                        title="Romina Hadid">
-                                                        <img src="../assets/img/team-3.jpg" alt="user2">
-                                                    </a>
-                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
-                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                                        title="Alexander Smith">
-                                                        <img src="../assets/img/team-4.jpg" alt="user3">
-                                                    </a>
-                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
-                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                                        title="Jessica Doe">
-                                                        <img src="../assets/img/team-1.jpg" alt="user4">
-                                                    </a>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="text-xs font-weight-bold"> $20,500 </span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <div class="progress-wrapper w-75 mx-auto">
-                                                    <div class="progress-info">
-                                                        <div class="progress-percentage">
-                                                            <span class="text-xs font-weight-bold">100%</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="progress">
-                                                        <div class="progress-bar bg-gradient-success w-100"
-                                                            role="progressbar" aria-valuenow="100" aria-valuemin="0"
-                                                            aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div>
-                                                        <img src="../assets/img/small-logos/logo-jira.svg"
-                                                            class="avatar avatar-sm me-3" alt="jira">
-                                                    </div>
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Add the New Pricing Page</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="avatar-group mt-2">
-                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
-                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                                        title="Ryan Tompson">
-                                                        <img src="../assets/img/team-4.jpg" alt="user5">
-                                                    </a>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="text-xs font-weight-bold"> $500 </span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <div class="progress-wrapper w-75 mx-auto">
-                                                    <div class="progress-info">
-                                                        <div class="progress-percentage">
-                                                            <span class="text-xs font-weight-bold">25%</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="progress">
-                                                        <div class="progress-bar bg-gradient-info w-25" role="progressbar"
-                                                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="25">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div>
-                                                        <img src="../assets/img/small-logos/logo-invision.svg"
-                                                            class="avatar avatar-sm me-3" alt="invision">
-                                                    </div>
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">Redesign New Online Shop</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="avatar-group mt-2">
-                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
-                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                                        title="Ryan Tompson">
-                                                        <img src="../assets/img/team-1.jpg" alt="user6">
-                                                    </a>
-                                                    <a href="javascript:;" class="avatar avatar-xs rounded-circle"
-                                                        data-bs-toggle="tooltip" data-bs-placement="bottom"
-                                                        title="Jessica Doe">
-                                                        <img src="../assets/img/team-4.jpg" alt="user7">
-                                                    </a>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle text-center text-sm">
-                                                <span class="text-xs font-weight-bold"> $2,000 </span>
-                                            </td>
-                                            <td class="align-middle">
-                                                <div class="progress-wrapper w-75 mx-auto">
-                                                    <div class="progress-info">
-                                                        <div class="progress-percentage">
-                                                            <span class="text-xs font-weight-bold">40%</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="progress">
-                                                        <div class="progress-bar bg-gradient-info w-40" role="progressbar"
-                                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="40">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
                                 </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-4">
+                <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
+                    <div class="card">
+                        <div class="card-header pb-0">
+                            <div class="row">
+                                <div class="col-lg-6 col-7">
+                                    <h6>Les candidatures inscris pour Doctorat</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body px-0 pb-2">
+                            <div class="table-responsive">
+                                <table class="table align-items-center mb-0" id="doctoratTable">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Nom & Prénom</th>
+                                            <th>CIN</th>
+                                            <th>Téléphone</th>
+                                            <th>Genre</th>
+                                            <th>Adresse</th>
+                                            <th>Email</th>
+                                            <th>Filière</th>
+                                            <th>Diplôme</th>
+                                            <th>Description de PFE</th>
+                                            <th>Nationalité</th>
+                                            <th>Ville de Résidance</th>
+                                            <th>Téléchargé dossier d'inscription</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <!-- Description Modal -->
+                                <div class="modal fade" id="descriptionModal" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Description complète</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+
+                                            <div class="modal-body" style="max-height:60vh; overflow-y:auto;">
+                                                <p id="modalContent" class="mb-0"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -371,4 +233,257 @@
             </div>
         </div>
     </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            $('#doctoratTable').DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                autoWidth: false,
+
+                ajax: {
+                    url: "{{ route('candidate.doctorat') }}",
+                },
+
+                language: {
+                    emptyTable: "Aucun résultat trouvé.",
+                    lengthMenu: "Afficher _MENU_ entrées",
+                    info: "Affichage _START_ à _END_ sur _TOTAL_ entrées",
+                    search: "Rechercher:",
+                    zeroRecords: "Aucun enregistrement trouvé",
+                    paginate: {
+                        first: "<<",
+                        last: ">>",
+                        next: ">",
+                        previous: "<"
+                    },
+                },
+
+                columnDefs: [{
+                        targets: 0,
+                        width: "5%"
+                    },
+                    {
+                        targets: 1,
+                        width: "15%"
+                    },
+                    {
+                        targets: 2,
+                        width: "8%"
+                    },
+                    {
+                        targets: 3,
+                        width: "10%"
+                    },
+                    {
+                        targets: 7,
+                        width: "10%"
+                    },
+                    {
+                        targets: 9,
+                        width: "20%"
+                    }, // Description
+                    {
+                        targets: 12,
+                        width: "10%",
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+
+                columns: [{
+                        data: null,
+                        name: 'id',
+                        render: (data, type, row, meta) => meta.row + 1
+                    },
+                    {
+                        data: 'nom',
+                        render: (data, type, row) => `<strong>${row.nom} ${row.prenom}</strong>`
+                    },
+                    {
+                        data: 'cin',
+                        data: 'cin'
+                    },
+                    {
+                        data: 'tele',
+                        data: 'tele'
+                    },
+                    {
+                        data: 'Sexe',
+                        data: 'Sexe'
+                    },
+                    {
+                        data: 'adresse',
+                        data: 'adresse'
+                    },
+                    {
+                        data: 'email',
+                        data: 'email'
+                    },
+                    {
+                        data: 'FiliereDDO',
+                        data: 'FiliereDDO'
+                    },
+                    {
+                        data: 'DDO',
+                        data: 'DDO'
+                    },
+                    {
+                        data: 'DescriptionPP',
+                        name: 'DescriptionPP',
+                        render: (data) => {
+                            const limited = data.substring(0, 50) + (data.length > 50 ? '...' : '');
+                            const escaped = data.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                            return `
+                                <span class="truncate-text"
+                                    data-fulltext="${data.replace(/"/g, '&quot;')}"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#descriptionModal">
+                                    ${limited}
+                                </span>`;
+                        }
+                    },
+
+                    {
+                        data: 'nat',
+                        name: 'nat'
+                    },
+                    {
+                        data: 'ville',
+                        name: 'ville'
+                    },
+
+                    // 🟩 Bouton téléchargement
+                    {
+                        data: 'completedFile',
+                        render: (data, type, row) => `
+                    <a class="download-btn" 
+                       href="/download-zipped-folder/${row.nom}/${row.prenom}/${row.cin}">
+                        Télécharger
+                    </a>`
+                    }
+                ]
+            });
+            document.addEventListener('click', e => {
+                if (e.target.matches('.truncate-text')) {
+                    document.getElementById('modalContent').innerText = e.target.dataset.fulltext;
+                }
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(e) {
+
+            $('#projectTable').DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                autoWidth: false,
+
+                ajax: {
+                    url: "{{ route('candidate.project') }}",
+                },
+
+                language: {
+                    emptyTable: "Aucun résultat trouvé.",
+                    lengthMenu: "Afficher _MENU_ entrées",
+                    info: "Affichage _START_ à _END_ sur _TOTAL_ entrées",
+                    search: "Rechercher:",
+                    zeroRecords: "Aucun enregistrement trouvé",
+                    paginate: {
+                        first: "<<",
+                        last: ">>",
+                        next: ">",
+                        previous: "<"
+                    },
+                },
+
+                columnDefs: [{
+                        targets: [0],
+                        width: "5%"
+                    },
+                    {
+                        targets: [1],
+                        width: "15%"
+                    },
+                    {
+                        targets: [2],
+                        width: "8%"
+                    },
+                    {
+                        targets: [3],
+                        width: "10%"
+                    },
+                    {
+                        targets: [4],
+                        width: "15%"
+                    },
+                    {
+                        targets: [5],
+                        width: "5%"
+                    },
+                    {
+                        targets: [9],
+                        orderable: false,
+                        searchable: false,
+                        width: "10%"
+                    },
+                ],
+
+                columns: [{
+                        data: null,
+                        name: 'id',
+                        render: (data, type, row, meta) => meta.row + 1
+                    },
+                    {
+                        data: 'nom',
+                        name: 'nom',
+                        render: (data, type, row) => `<strong>${row.nom} ${row.prenom}</strong>`
+                    },
+                    {
+                        data: 'cin',
+                        name: 'cin'
+                    },
+                    {
+                        data: 'telephone',
+                        name: 'telephone'
+                    },
+                    {
+                        data: 'email',
+                        name: 'email'
+                    },
+                    {
+                        data: 'age',
+                        name: 'age'
+                    },
+                    {
+                        data: 'formation',
+                        name: 'formation'
+                    },
+                    {
+                        data: 'parcourpro',
+                        name: 'parcourpro'
+                    },
+                    {
+                        data: 'ecp',
+                        name: 'ecp'
+                    },
+
+                    {
+                        data: 'completedFile',
+                        render: (data, type, row) =>
+                            `<a class="download-btn" href="/download-zipped-folder/${row.nom}/${row.prenom}">Télécharger</a>`
+                    },
+                    {
+                        data: 'id',
+                        render: (data, type, row) =>
+                            `<a class="action-btn" href="/candidate/detail/${row.id}">Voir Détails</a>`
+                    },
+                ]
+            });
+
+        });
+    </script>
 @endsection

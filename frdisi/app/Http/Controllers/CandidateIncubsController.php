@@ -1,21 +1,20 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Models\Candidateincubs;
+use App\Models\candidateIncubs;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use PDF;
-use Yajra\DataTables\Facades\Datatables;
-use ZipArchive;
-use Session;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
+use ZipArchive;
 
 class CandidateIncubsController extends Controller
 {
     public function InsertCondidaProject(Request $request)
     {
         if (($request->input('radio_group') == 'binome_non') || ($request->input('radio_group') == 'binome_oui')) {
-            $Check_Inscription = Candidateincubs::where('nom', $request->input('nom'))->where('prenom', $request->input('prenom'))->first();
+            $Check_Inscription = candidateIncubs::where('nom', $request->input('nom'))->where('prenom', $request->input('prenom'))->first();
             if (! $Check_Inscription) {
                 $totalFiles             = count($request->file());
                 $successfullyMovedFiles = 0;
@@ -32,7 +31,7 @@ class CandidateIncubsController extends Controller
                     }
                 }
                 if ($successfullyMovedFiles === $totalFiles) {
-                    $Candidateincubs                         = new Candidateincubs;
+                    $Candidateincubs                         = new candidateIncubs();
                     $Candidateincubs->nom                    = $request->input('nom');
                     $Candidateincubs->prenom                 = $request->input('prenom');
                     $Candidateincubs->cin                    = $request->input('cin');
@@ -94,45 +93,12 @@ class CandidateIncubsController extends Controller
                     $Candidateincubs->completedFile          = 1;
                     $Candidateincubs->save();
 
-                    $pdf = PDF::loadView('recu', compact('request'));
+                    $pdf = Pdf::loadView('recu', compact('request'));
                     return $pdf->download('recu_inscription.pdf');
                 }
             }
         }
         return redirect()->back();
-    }
-
-    public function getData(Request $request)
-    {
-        if ($request->ajax()) {
-            $data = candidateProject::select('*');
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->make(true);
-        }
-
-        if ($request->ajax()) {
-            $data = candidateProject2::select('*')->whereNotNull('cin2')->get();
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->make(true);
-        }
-
-        if ($request->ajax()) {
-            $data = FinanceProjet::select('*');
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->make(true);
-        }
-
-        if ($request->ajax()) {
-            $data = Projet::select('*');
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->make(true);
-        }
-
-        return view('auth.main', []);
     }
 
     public function downloadZippedFolder($lang, $nom, $prenom)
@@ -183,18 +149,20 @@ class CandidateIncubsController extends Controller
 
     public function main()
     {
-        return view('backend.views.adminpanel');
+        $countIncubs = DB::table('candidateincubs')->count();
+        $countDocotrat = DB::table('condidatures')->count();
+        return view('backend.views.adminpanel')->with(['countIncubs' => $countIncubs, 'countDocotrat' => $countDocotrat]);
     }
 
     public function showCandidateDetail($id)
     {
-        $projetdetail = Candidateincubs::find($id);
-        return view('auth.details', ['projetdetail' => $projetdetail]);
+        $projetdetail = DB::table('candidateincubs')->where('id', $id)->first();
+        // return view('auth.details', ['projetdetail' => $projetdetail]);
     }
 
     public function findCandidateDetail(Request $request, $id)
     {
-        $candidate                         = Candidateincubs::findOrFail($id);
+        $candidate                         = candidateIncubs::findOrFail($id);
         $candidate->nom                    = $request->input('nom');
         $candidate->prenom                 = $request->input('prenom');
         $candidate->cin                    = $request->input('cin');
@@ -257,14 +225,13 @@ class CandidateIncubsController extends Controller
         $candidate->update();
     }
 
-    public function CheckUserBackHome()
+    public function getDataIncubs(Request $request)
     {
-        if (Auth::check()) {
-            $candidatedetail = DB::table('candidateincubs')->orderBy('id', 'ASC')->get();
-            $condidatures    = DB::table('condidatures')->orderBy('id', 'ASC')->get();
-            return view('auth.main', ['candidatedetail' => $candidatedetail, 'condidatures' => $condidatures]);
+        if ($request->ajax()) {
+            $data = DB::table('candidateincubs')->select('*');
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->make(true);
         }
-
-        return redirect()->route('adminpanel');
     }
 }
