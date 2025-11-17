@@ -113,7 +113,7 @@
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Candidature</a>
                             <div class="dropdown-menu bg-light m-0">
-                                <a href="" class="dropdown-item">Doctorat</a>
+                                <a href="{{('closed')}}" class="dropdown-item">Doctorat</a>
                                 <a href="{{route('incubation')}}" class="dropdown-item">Incubation</a>
                             </div>
                         </div>

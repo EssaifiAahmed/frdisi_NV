@@ -14,7 +14,10 @@ class CandidateIncubsController extends Controller
     public function InsertCondidaProject(Request $request)
     {
         if (($request->input('radio_group') == 'binome_non') || ($request->input('radio_group') == 'binome_oui')) {
-            $Check_Inscription = candidateIncubs::where('nom', $request->input('nom'))->where('prenom', $request->input('prenom'))->first();
+            $Check_Inscription = DB::table('candidateincubs')
+                ->where('cin', $request->input('cin'))
+                ->orWhere('cin2', $request->input('cin2'))
+                ->first();
             if (! $Check_Inscription) {
                 $totalFiles             = count($request->file());
                 $successfullyMovedFiles = 0;
