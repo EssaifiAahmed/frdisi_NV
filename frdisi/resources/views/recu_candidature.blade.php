@@ -1,193 +1,179 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Candidature Doctorat</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <title>Reçu de Candidature - Incubation</title>
     <style>
+        body {
+            font-family: DejaVu Sans, sans-serif;
+            font-size: 12px;
+        }
+
         table {
             border-collapse: collapse;
             width: 100%;
+            margin-bottom: 15px;
         }
 
-        table td {
-
-            padding: 10px;
+        table td,
+        table th {
+            padding: 8px;
             border: 1px solid #111111;
-            text-align: left;
             vertical-align: top;
         }
 
         table td:first-child {
             font-weight: bold;
             background-color: #f2f2f2;
-            min-width: 200px;
+            width: 35%;
         }
 
-        .checkmark-circle {
-            width: 40px;
-            height: 40px;
-            position: relative;
+        h2,
+        h3 {
+            margin: 5px 0;
         }
 
-        .checkmark {
-            position: absolute;
-            top: 35%;
-            left: 15%;
-            width: 10px;
-            height: 20px;
-            border: solid #73ffa6;
-            border-width: 0 3px 3px 0;
-            transform: rotate(45deg) translateY(-50%);
+        .section-title {
+            margin-top: 20px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            text-decoration: underline;
         }
     </style>
 </head>
 
 <body>
     <main>
-        <div class="row mb-2">
-            <div class="col">
-                <center><img src="{{ public_path('logoFrdisi.png') }}" alt=""></center>
-            </div>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="{{ public_path('logoFrdisi.png') }}" alt="FRDISI" height="60">
+            <h2>Reçu de candidature à l’incubation</h2>
         </div>
 
-        <section class="mb-4">
-            <div class="row">
-                <table>
-                    <tr>
-                        <td id="header">Nom et prénom:</td>
-                        <td>{{ $request->input('Nom') }}
-                            {{ $request->input('Prenom') }}</td>
-                    </tr>
+        <p>Date de génération : {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}</p>
 
-                    <tr>
-                        <td id="header">CIN:</td>
-                        <td>{{ $request->input('cin') }}</td>
-                    </tr>
+        <h3 class="section-title">Porteur principal</h3>
+        <table>
+            <tr>
+                <td>Nom et prénom</td>
+                <td>{{ $candidate->nom }} {{ $candidate->prenom }}</td>
+            </tr>
+            <tr>
+                <td>CIN</td>
+                <td>{{ $candidate->cin }}</td>
+            </tr>
+            <tr>
+                <td>Téléphone</td>
+                <td>{{ $candidate->telephone }}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>{{ $candidate->email }}</td>
+            </tr>
+            <tr>
+                <td>Âge</td>
+                <td>{{ $candidate->age }}</td>
+            </tr>
+            <tr>
+                <td>Formation</td>
+                <td>{{ $candidate->formation }}</td>
+            </tr>
+            <tr>
+                <td>Parcours professionnel</td>
+                <td>{{ $candidate->parcourpro }}</td>
+            </tr>
+        </table>
 
-                    <tr>
-                        <td id="header">Date de naissance:</td>
-                        <td>{{ $request->input('date_naissance') }}</td>
-                    </tr>
+        @if ($candidate->nom2 || $candidate->prenom2)
+            <h3 class="section-title">Deuxième porteur</h3>
+            <table>
+                <tr>
+                    <td>Nom et prénom</td>
+                    <td>{{ $candidate->nom2 }} {{ $candidate->prenom2 }}</td>
+                </tr>
+                <tr>
+                    <td>CIN</td>
+                    <td>{{ $candidate->cin2 }}</td>
+                </tr>
+                <tr>
+                    <td>Téléphone</td>
+                    <td>{{ $candidate->telephone2 }}</td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td>{{ $candidate->email2 }}</td>
+                </tr>
+                <tr>
+                    <td>Âge</td>
+                    <td>{{ $candidate->age2 }}</td>
+                </tr>
+                <tr>
+                    <td>Formation</td>
+                    <td>{{ $candidate->formation2 }}</td>
+                </tr>
+            </table>
+        @endif
 
-                    <tr>
-                        <td id="header">Email:</td>
-                        <td>{{ $request->input('email') }}</td>
-                    </tr>
+        <h3 class="section-title">Projet</h3>
+        <table>
+            <tr>
+                <td>Nom de l’entreprise / projet</td>
+                <td>{{ $candidate->nom_entreprise }}</td>
+            </tr>
+            <tr>
+                <td>Date de création</td>
+                <td>{{ $candidate->date_creation }}</td>
+            </tr>
+            <tr>
+                <td>Statut de l’entreprise</td>
+                <td>{{ $candidate->statut_entreprise }}</td>
+            </tr>
+            <tr>
+                <td>Adresse du siège</td>
+                <td>{{ $candidate->Adresse_siege }}</td>
+            </tr>
+            <tr>
+                <td>Secteur d’activité</td>
+                <td>{{ $candidate->secteur_activite }}</td>
+            </tr>
+            <tr>
+                <td>Description du projet</td>
+                <td>{{ $candidate->description_projet }}</td>
+            </tr>
+            <tr>
+                <td>Contexte / problématique</td>
+                <td>{{ $candidate->contexte }}</td>
+            </tr>
+            <tr>
+                <td>Caractère innovant</td>
+                <td>{{ $candidate->caractere_innovant }}</td>
+            </tr>
+            <tr>
+                <td>Impact</td>
+                <td>{{ $candidate->impact }}</td>
+            </tr>
+            <tr>
+                <td>Résultats attendus</td>
+                <td>{{ $candidate->resultat_attends }}</td>
+            </tr>
+        </table>
 
-                    <tr>
-                        <td id="header">Téléphone:</td>
-                        <td>{{ $request->input('Tele') }}</td>
-                    </tr>
+        <h3 class="section-title">Financement (synthèse)</h3>
+        <table>
+            <tr>
+                <td>Total besoins</td>
+                <td>{{ $candidate->total_besoin }}</td>
+            </tr>
+            <tr>
+                <td>Total ressources</td>
+                <td>{{ $candidate->total_ressources }}</td>
+            </tr>
+        </table>
 
-                    <tr>
-                        <td id="header">Adresse:</td>
-                        <td>{{ $request->input('adresse') }}</td>
-                    </tr>
-
-                    <tr>
-                        <td id="header">Sexe:</td>
-                        <td>{{ $request->input('Sexe') }}</td>
-                    </tr>
-
-                    <tr>
-                        <td id="header">Ville:</td>
-                        <td>{{ $request->input('ville') }}</td>
-                    </tr>
-
-                    <tr>
-                        <td id="header">Nationalité:</td>
-                        <td>{{ $request->input('nat') }}</td>
-                    </tr>
-
-                    <tr>
-                        <td id="header">Dernier Diplôme obtenu:</td>
-                        <td>{{ $request->input('dip') }}</td>
-                    </tr>
-
-                    <tr>
-                        <td id="header">Filière du dernier diplome obtenu:</td>
-                        <td>{{ $request->input('filiere') }}</td>
-                    </tr>
-                </table>
-            </div>
-        </section>
-
-        <section>
-            <div class="row mb-3">
-                <div class="col-12">
-                    <h5>
-                        <u>Documents relevés:</u>
-                    </h5>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-6" style="align-self: center;">
-                    <h6 style="color:#6b833b">• Demande manuscrite adressée à Mr le Président de la Fondation</h6>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-6" style="align-self: center;">
-                    <h6 style="color:#6b833b">• Lettre de motivation</h6>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-6" style="align-self: center;">
-                    <h6 style="color:#6b833b">• Copie certifiée conforme des diplômes et des attestations (Master,
-                        Ingénieurd'Etat, DESA, Licence, Bac...)</h6>
-                </div>
-            </div>
-
-            <div class="row ">
-                <div class="col-6" style="align-self: center;">
-                    <h6 style="color:#6b833b">• Les diplômes étrangers doivent, impérativement, avoir une attestation
-                        d'équivalence</h6>
-                </div>
-            </div>
-
-            <div class="row ">
-                <div class="col-6" style="align-self: center;">
-                    <h6 style="color:#6b833b">• Copie certifiée conforme des relevés de notes obtenues durant tout le
-                        cursus universitaire</h6>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-6" style="align-self: center;">
-                    <h6 style="color:#6b833b">• Photocopie légalisee de la carte d'identité nationale</h6>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-6" style="align-self: center;">
-                    <h6 style="color:#6b833b">• 2 photos d'identité</h6>
-                </div>
-            </div>
-
-            <div class="row mb-5">
-                <div class="col-6" style="align-self: center;">
-                    <h6 style="color:#6b833b">• Curriculum vitae avec photo du candidat</h6>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col">
-                    <h6 class="text-center" style="border: 1px solid #111111;">Valider!</h6>
-                </div>
-            </div>
-        </section>
+        <p style="margin-top: 30px;">
+            Ce reçu atteste de la bonne réception de votre dossier de candidature à l’incubation.
+        </p>
     </main>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous">
-    </script>
 </body>
 
 </html>
