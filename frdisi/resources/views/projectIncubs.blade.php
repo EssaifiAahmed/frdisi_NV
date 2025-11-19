@@ -779,17 +779,14 @@
 
                 radioButtons.forEach(button => {
                     button.addEventListener("change", (event) => {
+                        // Ensure ecp sections are visible in both cases
+                        div1.classList.remove('ecp_class');
+                        div2.classList.remove('ecp_class');
                         if (event.target.value === 'binome_oui') {
-                            div1.classList.remove('ecp_class');
-                            div2.classList.remove('ecp_class');
-
                             enableInputs(inputsPorteur1);
                             enableInputs(inputsPorteur2);
                             enableInputs(inputsProjet);
                         } else if (event.target.value === 'binome_non') {
-                            div1.classList.add('ecp_class');
-                            div2.classList.add('ecp_class');
-
                             enableInputs(inputsPorteur1);
                             disableInputs(inputsPorteur2);
                             enableInputs(inputsProjet);
