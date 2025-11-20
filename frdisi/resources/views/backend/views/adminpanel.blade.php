@@ -359,7 +359,7 @@
                         data: 'completedFile',
                         render: (data, type, row) => `
                     <a class="download-btn" 
-                       href="/download-zipped-folder/${row.nom}/${row.prenom}/${row.cin}">
+                       href="/download.zipped-folder/${row.nom}/${row.prenom}/${row.cin}">
                         Télécharger
                     </a>`
                     }
@@ -474,7 +474,7 @@
                     {
                         data: 'completedFile',
                         render: (data, type, row) =>
-                            `<a class="download-btn" href="/download-zipped-folder/${row.nom}/${row.prenom}">Télécharger</a>`
+                            `<a class="download-btn" href="/download-zipped-folder/${row.cin}/${row.nom}/${row.prenom}">Télécharger</a>`
                     },
                     {
                         data: 'id',

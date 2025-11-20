@@ -717,6 +717,107 @@
             });
         </script>
         <script>
+            document.addEventListener('DOMContentLoaded', function(e) {
+                $(document).ready(function() {
+                    $("#add-row").click(function() {
+                        // Add a new row to the table
+                        var newRow = $('<tr>' +
+                            '<td><select class="form-select" name="Rubrique_de_depenses"></select></td>' +
+                            '<td><textarea type="text" name="description"></textarea></td>' +
+                            '<td><input type="text" name="montant_sf" id="montant_sf" class="montant"></td>' +
+                            '<td><input type="text" name="source_de_financement" id="source_de_financement" class="source_de_financement"></td>' +
+                            '<td><input type="text" name="pourcentage" id="result"></td>' +
+                            '</tr>');
+
+                        // Populate the select element with options using a for loop
+                        var selectElement = newRow.find('select[name="Rubrique_de_depenses"]');
+                        var rubriques = ["Acquisition licence, logiciels et abonnements",
+                            "Achat de marchandises", "Aménagement et installations", "Autres",
+                            "B.F.R", "Brevet, marques et valeurs similaires",
+                            "Charges de personnel", "Charges locatives", "Equipements",
+                            "Frais préliminaires", "FFrais de communication", "Frais étude",
+                            "Frais de déplacement", "Frais approche + dédouanement",
+                            "Frais assurance", "Honoraires", "Matériel et outillage",
+                            "Mobilier et matériel de bureau", "Système information"
+                        ];
+
+                        for (var i = 0; i < rubriques.length; i++) {
+                            selectElement.append('<option value="' + rubriques[i] + '">' + rubriques[
+                                i] + '</option>');
+                        }
+
+                        // Append the new row to the table
+                        $("#dynamic-table tbody").append(newRow);
+
+                        // Attach input event handler to the new row
+                        newRow.find('.montant, .source_de_financement').on('input', function() {
+                            calculatePercentage($(this).closest('tr'));
+                        });
+                    });
+
+                    // Delegate the input event handling to the document
+                    $(document).on('input', '.montant, .source_de_financement', function() {
+                        calculatePercentage(this);
+                    });
+                });
+            });
+
+            function calculatePercentage(input) {
+                // Get input values
+                var row = $(input).closest('tr');
+                var montant = parseFloat(row.find('.montant').val()) || 1;
+                var sourceDeFinancement = parseFloat(row.find('.source_de_financement').val()) ||
+                    1; // Default to 1 to avoid division by zero
+
+                // Calculate percentage
+                var result = 0;
+                var rawResult = (sourceDeFinancement / montant) * 100;
+                result = rawResult.toFixed(2);
+
+                // Display the result
+                row.find('#result').val(result);
+            }
+        </script>
+        <script>
+            let radioButtonAttestation = document.querySelectorAll('input[name="radioadressp1"]');
+
+            const cinpdfp1 = document.getElementById('cinPDfp1');
+            const attresp1 = document.getElementById('attresp1');
+
+            radioButtonAttestation.forEach(button => {
+                button.addEventListener("change", (event) => {
+                    if (event.target.value === 'adresse_non') {
+                        cinpdfp1.disabled = false;
+                    } else {
+                        attresp1.disabled = true;
+                    }
+                    if (event.target.value === 'adresse_oui') {
+                        cinpdfp1.disabled = false;
+                    } else {
+                        attresp1.disabled = false;
+                    }
+                });
+            });
+
+            let radioButtonAttestation2 = document.querySelectorAll('input[name="radioadressp2"]');
+
+            const cinpdfp2 = document.getElementById('cinPDfp2');
+            const attresp2 = document.getElementById('atteresp2');
+
+            radioButtonAttestation2.forEach(button => {
+                button.addEventListener("change", (event) => {
+                    if (event.target.value === 'adressnon') {
+                        cinpdfp2.disabled = false;
+                    } else {
+                        attresp2.disabled = true;
+                    }
+                    if (event.target.value === 'adressoui') {
+                        cinpdfp2.disabled = false;
+                    } else {
+                        attresp2.disabled = false;
+                    }
+                });
+            });
             document.addEventListener('DOMContentLoaded', function() {
                 const radioButtons = document.querySelectorAll('input[name="radio_group"]');
 

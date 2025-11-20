@@ -21,7 +21,7 @@ Route::middleware(['isauth'])->group(function () {
     Route::get('/candidate/detail/{id}', [CandidateIncubsController::class, 'showCandidateDetail'])->name('candidate.detail');
     Route::post('/candidate/update/{id}', [CandidateIncubsController::class, 'findCandidateDetail'])->name('candidate.update');
     Route::get('/candidate/project', [CandidateIncubsController::class, 'getDataIncubs'])->name('candidate.project');
-    Route::get('/download-zipped-folder/{nom}/{prenom}/{cin}', [CandidateIncubsController::class, 'downloadZippedFolder'])->name('download.zipped-folder');
+    Route::get('/download-zipped-folder/{cin}/{nom}/{prenom}', [CandidateIncubsController::class, 'downloadZippedFolder'])->name('download.zipped-folder');
     //---------------------------------------------- Routes for Doctoral Candidature ------------------------------------------------//
     Route::get('/doctorat/candidature/data', [CondidatureController::class, 'getData'])->name('candidate.doctorat');
     Route::get('/doctorat/candidature/download-zipped-folder/{nom}/{prenom}', [CondidatureController::class, 'downloadZippedFolder'])->name('doctorat.candidature.downloadZippedFolder');

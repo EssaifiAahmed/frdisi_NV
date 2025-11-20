@@ -46,7 +46,7 @@
 <body>
     <main>
         <div style="text-align: center; margin-bottom: 20px;">
-            <img src="{{ public_path('logoFrdisi.png') }}" alt="FRDISI" height="60">
+            <img src="{{ public_path('img/logoFrdisi.png') }}" alt="FRDISI" height="60">
             <h2>Reçu de candidature à l’incubation</h2>
         </div>
 
@@ -56,60 +56,60 @@
         <table>
             <tr>
                 <td>Nom et prénom</td>
-                <td>{{ $candidate->nom }} {{ $candidate->prenom }}</td>
+                <td>{{ $Candidateincubs->nom }} {{ $Candidateincubs->prenom }}</td>
             </tr>
             <tr>
                 <td>CIN</td>
-                <td>{{ $candidate->cin }}</td>
+                <td>{{ $Candidateincubs->cin }}</td>
             </tr>
             <tr>
                 <td>Téléphone</td>
-                <td>{{ $candidate->telephone }}</td>
+                <td>{{ $Candidateincubs->telephone }}</td>
             </tr>
             <tr>
                 <td>Email</td>
-                <td>{{ $candidate->email }}</td>
+                <td>{{ $Candidateincubs->email }}</td>
             </tr>
             <tr>
                 <td>Âge</td>
-                <td>{{ $candidate->age }}</td>
+                <td>{{ $Candidateincubs->age }}</td>
             </tr>
             <tr>
                 <td>Formation</td>
-                <td>{{ $candidate->formation }}</td>
+                <td>{{ $Candidateincubs->formation }}</td>
             </tr>
             <tr>
                 <td>Parcours professionnel</td>
-                <td>{{ $candidate->parcourpro }}</td>
+                <td>{{ $Candidateincubs->parcourpro }}</td>
             </tr>
         </table>
 
-        @if ($candidate->nom2 || $candidate->prenom2)
+        @if ($Candidateincubs->nom2 || $Candidateincubs->prenom2)
             <h3 class="section-title">Deuxième porteur</h3>
             <table>
                 <tr>
                     <td>Nom et prénom</td>
-                    <td>{{ $candidate->nom2 }} {{ $candidate->prenom2 }}</td>
+                    <td>{{ $Candidateincubs->nom2 }} {{ $Candidateincubs->prenom2 }}</td>
                 </tr>
                 <tr>
                     <td>CIN</td>
-                    <td>{{ $candidate->cin2 }}</td>
+                    <td>{{ $Candidateincubs->cin2 }}</td>
                 </tr>
                 <tr>
                     <td>Téléphone</td>
-                    <td>{{ $candidate->telephone2 }}</td>
+                    <td>{{ $Candidateincubs->telephone2 }}</td>
                 </tr>
                 <tr>
                     <td>Email</td>
-                    <td>{{ $candidate->email2 }}</td>
+                    <td>{{ $Candidateincubs->email2 }}</td>
                 </tr>
                 <tr>
                     <td>Âge</td>
-                    <td>{{ $candidate->age2 }}</td>
+                    <td>{{ $Candidateincubs->age2 }}</td>
                 </tr>
                 <tr>
                     <td>Formation</td>
-                    <td>{{ $candidate->formation2 }}</td>
+                    <td>{{ $Candidateincubs->formation2 }}</td>
                 </tr>
             </table>
         @endif
@@ -118,43 +118,43 @@
         <table>
             <tr>
                 <td>Nom de l’entreprise / projet</td>
-                <td>{{ $candidate->nom_entreprise }}</td>
+                <td>{{ $Candidateincubs->nom_entreprise }}</td>
             </tr>
             <tr>
                 <td>Date de création</td>
-                <td>{{ $candidate->date_creation }}</td>
+                <td>{{ $Candidateincubs->date_creation }}</td>
             </tr>
             <tr>
                 <td>Statut de l’entreprise</td>
-                <td>{{ $candidate->statut_entreprise }}</td>
+                <td>{{ $Candidateincubs->statut_entreprise }}</td>
             </tr>
             <tr>
                 <td>Adresse du siège</td>
-                <td>{{ $candidate->Adresse_siege }}</td>
+                <td>{{ $Candidateincubs->Adresse_siege }}</td>
             </tr>
             <tr>
                 <td>Secteur d’activité</td>
-                <td>{{ $candidate->secteur_activite }}</td>
+                <td>{{ $Candidateincubs->secteur_activite }}</td>
             </tr>
             <tr>
                 <td>Description du projet</td>
-                <td>{{ $candidate->description_projet }}</td>
+                <td>{{ $Candidateincubs->description_projet }}</td>
             </tr>
             <tr>
                 <td>Contexte / problématique</td>
-                <td>{{ $candidate->contexte }}</td>
+                <td>{{ $Candidateincubs->contexte }}</td>
             </tr>
             <tr>
                 <td>Caractère innovant</td>
-                <td>{{ $candidate->caractere_innovant }}</td>
+                <td>{{ $Candidateincubs->caractere_innovant }}</td>
             </tr>
             <tr>
                 <td>Impact</td>
-                <td>{{ $candidate->impact }}</td>
+                <td>{{ $Candidateincubs->impact }}</td>
             </tr>
             <tr>
                 <td>Résultats attendus</td>
-                <td>{{ $candidate->resultat_attends }}</td>
+                <td>{{ $Candidateincubs->resultat_attends }}</td>
             </tr>
         </table>
 
@@ -162,11 +162,11 @@
         <table>
             <tr>
                 <td>Total besoins</td>
-                <td>{{ $candidate->total_besoin }}</td>
+                <td>{{ $Candidateincubs->total_besoin }}</td>
             </tr>
             <tr>
                 <td>Total ressources</td>
-                <td>{{ $candidate->total_ressources }}</td>
+                <td>{{ $Candidateincubs->total_ressources }}</td>
             </tr>
         </table>
 

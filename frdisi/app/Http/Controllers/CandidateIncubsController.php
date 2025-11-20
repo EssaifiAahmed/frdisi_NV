@@ -5,9 +5,9 @@ use App\Models\candidateIncubs;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
-use ZipArchive;
 
 class CandidateIncubsController extends Controller
 {
@@ -88,23 +88,29 @@ class CandidateIncubsController extends Controller
         $successfullyMovedFiles = 0;
 
         // 4) Gestion plus sûre des fichiers (storeAs dans disk 'public')
-        $folderName = $cin ? ($cin . '_' . Str::slug($request->input('nom') . '_' . $request->input('prenom'))) : (Str::slug($request->input('nom') . '_' . $request->input('prenom')));
-        $basePath   = 'public/Dossier_inscription/' . $folderName;
+        $folderName = $cin . '_' . Str::slug($request->nom . '_' . $request->prenom);
+        $basePath   = 'Dossier_inscription/' . $folderName;
 
-        $storedFiles = [];
+        // Créer dossier SUR disk public
+        if (! Storage::disk('public')->exists($basePath)) {
+            Storage::disk('public')->makeDirectory($basePath);
+        }
+
+        // Upload des fichiers
         foreach ($request->allFiles() as $inputName => $file) {
-            if (! $file) {
-                continue;
-            }
 
-            $ext = $file->getClientOriginalExtension();
-            // garder une ext correcte et un nom lisible
+            $ext      = $file->getClientOriginalExtension();
             $fileName = $inputName . '.' . $ext;
-            $path     = $file->storeAs($basePath, $fileName); // stocke dans storage/app/public/...
-            if ($path === false) {
-                return redirect()->back()->with('error', 'Erreur lors de l’enregistrement du fichier ' . $inputName)->withInput();
+
+            $path = $file->storeAs(
+                'Dossier_inscription/' . $folderName,
+                $fileName,
+                'public'
+            );
+
+            if (! $path) {
+                dd("Erreur upload fichier : $inputName");
             }
-            $storedFiles[$inputName] = $path;
         }
         // 5) Enregistrement en base (garder votre mapping complet)
         $Candidateincubs             = new candidateIncubs();
@@ -175,49 +181,56 @@ class CandidateIncubsController extends Controller
 
         $Candidateincubs->save();
 
-        // 6) Génération du PDF de reçu
-        $pdf = Pdf::loadView('recu_incubation', ['candidate' => $candidate]);
-        return $pdf->download('recu_incubation.pdf');
+        try {
+            $pdf = Pdf::loadView('recu_candidature', ['Candidateincubs' => $Candidateincubs]);
+            return $pdf->download('recu_incubation.pdf');
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
 
     }
 
-    public function downloadZippedFolder($nom, $prenom, $cin)
+    public function downloadZippedFolder($cin, $nom, $prenom)
     {
-        $folderName  = $nom . '_' . $prenom;
-        $folderPath  = storage_path('app/public/Dossier_inscription/' . $folderName);
-        $zipFilePath = storage_path('app/public/Dossier_inscription/' . $folderName . '/' . $folderName . '.zip');
+        $folderName = $cin . '_' . str_replace('-', '_', Str::slug($nom . '_' . $prenom));
 
+        // Chemin correct !
+        $folderPath  = storage_path('app/public/Dossier_inscription/' . $folderName);
+        $zipFilePath = $folderPath . '/' . $folderName . '.zip';
+
+        // Vérifier ZipArchive
         if (! extension_loaded('zip')) {
-            throw new \Exception('The Zip extension is not enabled on your server.');
+            throw new \Exception('Zip extension is not enabled on your server.');
         }
 
+        // Vérifier dossier
         if (! is_dir($folderPath)) {
             throw new \Exception('Folder not found: ' . $folderPath);
         }
 
-        $zip = new ZipArchive;
-        if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+        // Créer ZIP
+        $zip = new \ZipArchive;
+        if ($zip->open($zipFilePath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
             throw new \Exception('Failed to create zip file');
         }
 
-        $files = glob($folderPath . '/*.pdf');
-        foreach ($files as $file) {
-            $zip->addFile($file, basename($file));
+        // Ajouter tous les fichiers
+        foreach (glob($folderPath . '/*') as $file) {
+            if (is_file($file)) {
+                $zip->addFile($file, basename($file));
+            }
         }
 
         $zip->close();
 
-        $headers = [
-            'Content-Type' => 'application/octet-stream',
-        ];
-
+        // Supprimer zip après téléchargement
         register_shutdown_function(function () use ($zipFilePath) {
             if (file_exists($zipFilePath)) {
                 unlink($zipFilePath);
             }
         });
 
-        return response()->download($zipFilePath, $folderName . '.zip', $headers);
+        return response()->download($zipFilePath, $folderName . '.zip');
     }
 
     public function main()
